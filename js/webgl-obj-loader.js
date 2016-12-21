@@ -211,19 +211,37 @@
     this.indices = unpacked.indices;
   }
 
+  // improve ajax call when requesting the same obj! many times
+  var names = [];
   var Ajax = function(){
     // this is just a helper class to ease ajax calls
     var _this = this;
     this.xmlhttp = new XMLHttpRequest();
 
     this.get = function(url, callback){
-      _this.xmlhttp.onreadystatechange = function(){
-        if(_this.xmlhttp.readyState === 4){
-          callback(_this.xmlhttp.responseText, _this.xmlhttp.status);
-        }
-      };
-      _this.xmlhttp.open('GET', url, true);
-      _this.xmlhttp.send();
+      if(!Array.isArray(names [url])){
+        names [url] = [];
+      }
+      if(!Array.isArray(names [url]['callbacks'])){
+        names [url]['callbacks'] = [];
+        names [url]['exe'] =false;
+      }
+      names [url]['callbacks'].push(callback);
+      if(names [url]['exe']==false){
+          names [url]['exe']=true;
+          _this.xmlhttp.onreadystatechange = function(){
+          if(_this.xmlhttp.readyState === 4){
+            for (var i = names[url]['callbacks'].length - 1; i >= 0; i--) {
+              names[url]['callbacks'][i](_this.xmlhttp.responseText,_this.xmlhttp.status);
+            }
+
+          }
+        };
+        _this.xmlhttp.open('GET', url, true);
+        _this.xmlhttp.send();
+
+      }
+      
     }
   };
 
