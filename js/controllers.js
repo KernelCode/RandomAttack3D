@@ -268,37 +268,37 @@ document.onmousemove  = function(e){
 
   mouseXY={mX:e.pageX,mY:e.pageY,valueX:valueX,valueY:valueY};
   if(e.pageX-mXCurrnt>0){
-    console.log("right");
+    
     valueX+=valX;
     lastLeftRight=false;
   }else if(e.pageX-mXCurrnt<0){
-    console.log("left");
+    
     valueX-=valX;
     lastLeftRight=true;
   }else{
     if(lastLeftRight){
-      console.log("current");
+      
       valueX-=valX;
     }else{
-      console.log("current");
+      
       valueX+=valX;
     }
 
   }
   if(e.pageY-mYCurrnt>0){
-    console.log("up");
+    
     valueY+=valY;
     lastUpDown=false;
   }else if(e.pageY-mYCurrnt<0){
-    console.log("down");
+    
     valueY-=valY;
     lastUpDown=true;
   }else{
     if(lastUpDown){
-      console.log("current");
+     
       valueY-=valY;
     }else{
-      console.log("current");
+     
       valueY+=valY;
     }
 
