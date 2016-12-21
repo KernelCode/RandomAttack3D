@@ -138,10 +138,10 @@ function start(){
   initWebGL(CANVAS);  
 
   if (GL) {
-      GL.clearColor(0.02, 0.02, 0.02, 1.0);  // Clear to black, fully opaque
-      GL.clearDepth(3.0);                 // Clear everything
-      GL.enable(GL.DEPTH_TEST);           // Enable depth testing
-      GL.depthFunc(GL.LEQUAL);            // Near things obscure far things
+      GL.clearColor(0.02, 0.02, 0.02, 1.0);  
+      GL.clearDepth(3.0);                 
+      GL.enable(GL.DEPTH_TEST);           
+      GL.depthFunc(GL.LEQUAL);            
 
       initBuffers(GL);
 
@@ -166,7 +166,7 @@ function initWebGL(canvas){
   
   if (!GL) {
     alert("متصفحك لايدعم WebGL! :( ");
-    alert("Unable to initialize WebGL. Your browser may not support it.");
+    
   }
   MapCanvas = document.getElementById("map");
   textCanvas = document.getElementById("text");
