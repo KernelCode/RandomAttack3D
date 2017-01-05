@@ -39,7 +39,7 @@ var GameTextures=function(gl){
   this.setTexure = function(image,file_name,obj){
 
     image.onload = function() { obj.handleTextureLoaded(file_name,image); }
-    image.src = "/objs/"+file_name+".png";
+    image.src = "/RandomAttack3D/objs/"+file_name+".png";
 
   }
   this.load = function(file_name){
