@@ -1,4 +1,4 @@
-var ws = new WebSocket('wss://polar-dawn-54951.herokuapp.com:{WSS_PORT}', 'echo-protocol');
+var ws = new WebSocket('wss://polar-dawn-54951.herokuapp.com:568171', 'echo-protocol');
 
 
 var teamID = 0;
