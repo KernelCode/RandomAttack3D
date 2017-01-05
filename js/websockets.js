@@ -1,4 +1,4 @@
-var ws = new WebSocket('wss://polar-dawn-54951.herokuapp.com', 'echo-protocol');
+var ws = new WebSocket('wss://randomattack3d.herokuapp.com', 'echo-protocol');
 
 
 var teamID = 0;
