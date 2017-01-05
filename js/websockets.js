@@ -18,11 +18,7 @@ function startGame(){
             }
         });
         ws.send(msg);
-        msg = JSON.stringify({
-            msg:"getTeamNum",
-            payload:{}
-        });
-        ws.send(msg);
+
     }else{
         alert("خطاء في الاتصال بالسيرفر حاولاً مره اخرى!");
         return ;
@@ -132,3 +128,8 @@ ws.addEventListener("message", function(e) {
 
 });
 
+msg = JSON.stringify({
+    msg:"getTeamNum",
+    payload:{}
+});
+ws.send(msg);
