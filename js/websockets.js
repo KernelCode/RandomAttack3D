@@ -60,7 +60,12 @@ updateTankFunc = function(tank,Ar){
 ws.addEventListener("open",function(e){
     
     is_socket_open=true;
-
+    
+    msg = JSON.stringify({
+        msg:"getTeamNum",
+        payload:{}
+    });
+    ws.send(msg);
 });
 
 ws.addEventListener("message", function(e) {
@@ -127,9 +132,3 @@ ws.addEventListener("message", function(e) {
     }
 
 });
-
-msg = JSON.stringify({
-    msg:"getTeamNum",
-    payload:{}
-});
-ws.send(msg);
