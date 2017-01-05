@@ -71,7 +71,7 @@ ws.addEventListener("open",function(e){
 ws.addEventListener("message", function(e) {
     // The data is simply the message that we're sending back
     var msg = e.data;
-    console.log(e.data);
+
     var msg = JSON.parse(msg);
     if(msg.msg=="getTeamNum"){
         var teams = msg.payload;
