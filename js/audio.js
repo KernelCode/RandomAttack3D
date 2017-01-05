@@ -7,7 +7,7 @@
 		'starUp':{play:getSecs(true)},
 		'kill':{play:getSecs(true)}
 };*/
-var path="/sounds/";
+var path="/RandomAttack3D/sounds/";
 var lib=
 	{
 		"explode5":new Audio(path+"explode5.wav"),
