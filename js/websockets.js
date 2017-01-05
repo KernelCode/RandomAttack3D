@@ -18,6 +18,11 @@ function startGame(){
             }
         });
         ws.send(msg);
+        msg = JSON.stringify({
+            msg:"getTeamNum",
+            payload:{}
+        });
+        ws.send(msg);
     }else{
         alert("خطاء في الاتصال بالسيرفر حاولاً مره اخرى!");
         return ;
@@ -67,6 +72,13 @@ ws.addEventListener("message", function(e) {
     var msg = e.data;
     console.log(e.data);
     var msg = JSON.parse(msg);
+    if(msg.msg=="getTeamNum"){
+        var teams = msg.payload;
+        document.getElementById('players_0').textContent =teams.teams[0];
+        document.getElementById('players_1').textContent =teams.teams[1];
+        document.getElementById('players_2').textContent =teams.teams[2];
+        return ;
+    }
     if(msg.msg=="updateHealth"){
         var tank = msg.payload;
         updateHealth(tank.UID,tank.health);
