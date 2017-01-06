@@ -1,5 +1,5 @@
 var ws = new WebSocket('wss://randomattack3d.herokuapp.com', 'echo-protocol');
-//var ws = new WebSocket('ws://127.0.0.1:6001', 'echo-protocol');
+//var ws = new WebSocket('ws://192.168.1.102:6001', 'echo-protocol');
 
 var teamID = 0;
 
@@ -88,6 +88,7 @@ ws.addEventListener("message", function(e) {
     var msg = e.data;
     var msg = LZString.decompressFromUTF16(msg);
     var msg = JSON.parse(msg);
+    console.log(msg);
     if(msg.msg=="getTeamNum"){
         var teams = msg.payload;
         document.getElementById('players_0').textContent =teams.teams[0];
