@@ -90,7 +90,7 @@ ws.addEventListener("message", function(e) {
     var msg = e.data;
     var msg = LZString.decompressFromUTF16(msg);
     var msg = JSON.parse(msg);
-    console.log(msg);
+    
     if(msg.msg=="getTeamNum"){
         var teams = msg.payload;
         document.getElementById('players_0').textContent =teams.teams[0];
@@ -105,7 +105,6 @@ ws.addEventListener("message", function(e) {
     }
     if(msg.msg=="updateTankAr"){
         var tank = msg.payload;
-
         updateTankAr(tank.UID,tank.Ar,tank.x,tank.y,tank.health,tank.KillCount);
         return ;
     }
