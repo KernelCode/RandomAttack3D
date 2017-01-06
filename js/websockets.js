@@ -1,19 +1,5 @@
-//var ws = new WebSocket('wss://randomattack3d.herokuapp.com', 'echo-protocol');
-var ws = new WebSocket('ws://127.0.0.1:6001', 'echo-protocol');
-var getUTF8Size = function( str ) {
-  var sizeInBytes = str.split('')
-    .map(function( ch ) {
-      return ch.charCodeAt(0);
-    }).map(function( uchar ) {
-      // The reason for this is explained later in
-      // the section “An Aside on Text Encodings”
-      return uchar < 128 ? 1 : 2;
-    }).reduce(function( curr, next ) {
-      return curr + next;
-    });
-
-  return sizeInBytes;
-};
+var ws = new WebSocket('wss://randomattack3d.herokuapp.com', 'echo-protocol');
+//var ws = new WebSocket('ws://127.0.0.1:6001', 'echo-protocol');
 
 var teamID = 0;
 
