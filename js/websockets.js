@@ -19,7 +19,7 @@ function startGame(){
         });
        
 
-        msg = LZString.compressToUTF16(msg);
+        msg = LZString.compress(msg);
 
         ws.send(msg);
 
@@ -37,7 +37,7 @@ updateHealth = function(tank){
         UID:tank.UID,
         health:tank.health
     }};
-    msg = LZString.compressToUTF16(JSON.stringify(msg));
+    msg = LZString.compress(JSON.stringify(msg));
 
     ws.send(msg);
 }
@@ -48,7 +48,7 @@ sendShot = function(tank){
         UID:tank.UID
     }};
     
-    msg = LZString.compressToUTF16(JSON.stringify(msg));
+    msg = LZString.compress(JSON.stringify(msg));
     ws.send(msg);
 }
 updateTankFunc = function(tank,Ar){
@@ -64,7 +64,7 @@ updateTankFunc = function(tank,Ar){
     }};
     msg  = JSON.stringify(msg);
     
-    msg = LZString.compressToUTF16(msg);
+    msg = LZString.compress(msg);
    
     ws.send(msg);
 }
@@ -77,7 +77,7 @@ ws.addEventListener("open",function(e){
         payload:{}
     });
 
-    msg = LZString.compressToUTF16(msg);
+    msg = LZString.compress(msg);
 
     ws.send(msg);
 
@@ -88,7 +88,7 @@ window.addEventListener("beforeunload", function(e){
 ws.addEventListener("message", function(e) {
     // The data is simply the message that we're sending back
     var msg = e.data;
-    var msg = LZString.decompressFromUTF16(msg);
+    var msg = LZString.decompress(msg);
     var msg = JSON.parse(msg);
     
     if(msg.msg=="getTeamNum"){
