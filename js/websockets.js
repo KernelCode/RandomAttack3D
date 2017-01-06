@@ -82,7 +82,9 @@ ws.addEventListener("open",function(e){
     ws.send(msg);
 
 });
-
+window.addEventListener("beforeunload", function(e){
+   ws.close();
+}, false);
 ws.addEventListener("message", function(e) {
     // The data is simply the message that we're sending back
     var msg = e.data;
