@@ -1,5 +1,19 @@
-var ws = new WebSocket('wss://randomattack3d.herokuapp.com', 'echo-protocol');
+//var ws = new WebSocket('wss://randomattack3d.herokuapp.com', 'echo-protocol');
+var ws = new WebSocket('ws://127.0.0.1:6001', 'echo-protocol');
+var getUTF8Size = function( str ) {
+  var sizeInBytes = str.split('')
+    .map(function( ch ) {
+      return ch.charCodeAt(0);
+    }).map(function( uchar ) {
+      // The reason for this is explained later in
+      // the section “An Aside on Text Encodings”
+      return uchar < 128 ? 1 : 2;
+    }).reduce(function( curr, next ) {
+      return curr + next;
+    });
 
+  return sizeInBytes;
+};
 
 var teamID = 0;
 
@@ -17,6 +31,10 @@ function startGame(){
                 'teamID':teamID
             }
         });
+       
+
+        msg = LZString.compressToUTF16(msg);
+
         ws.send(msg);
 
     }else{
@@ -33,7 +51,9 @@ updateHealth = function(tank){
         UID:tank.UID,
         health:tank.health
     }};
-    ws.send(JSON.stringify(msg));
+    msg = LZString.compressToUTF16(JSON.stringify(msg));
+
+    ws.send(msg);
 }
 sendShot = function(tank){
     if(tank==null)
@@ -41,7 +61,9 @@ sendShot = function(tank){
     var msg = {'msg':"recivedShot",'payload':{
         UID:tank.UID
     }};
-    ws.send(JSON.stringify(msg));
+    
+    msg = LZString.compressToUTF16(JSON.stringify(msg));
+    ws.send(msg);
 }
 updateTankFunc = function(tank,Ar){
     if(tank == null)
@@ -54,8 +76,11 @@ updateTankFunc = function(tank,Ar){
         health:tank.health,
         KillCount:tank.KillCount,
     }};
-
-    ws.send(JSON.stringify(msg));
+    msg  = JSON.stringify(msg);
+    
+    msg = LZString.compressToUTF16(msg);
+   
+    ws.send(msg);
 }
 ws.addEventListener("open",function(e){
     
@@ -65,13 +90,17 @@ ws.addEventListener("open",function(e){
         msg:"getTeamNum",
         payload:{}
     });
+
+    msg = LZString.compressToUTF16(msg);
+
     ws.send(msg);
+
 });
 
 ws.addEventListener("message", function(e) {
     // The data is simply the message that we're sending back
     var msg = e.data;
-
+    var msg = LZString.decompressFromUTF16(msg);
     var msg = JSON.parse(msg);
     if(msg.msg=="getTeamNum"){
         var teams = msg.payload;
