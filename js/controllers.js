@@ -28,7 +28,7 @@ document.onclick=function(){
 document.onkeydown  = function(e){
   if(clciked=="down")
    return ;
-  
+  console.log("Player delta="+delta);
   switch(e.which){
       case 40: //down
       //  Player.clicked="down";

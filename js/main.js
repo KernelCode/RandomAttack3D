@@ -52,11 +52,7 @@ var MapCanvas;
 
 var once=false;
 
-var fps = 54;
-var now;
-var then = Date.now();
-var interval = 1000/fps;
-var delta;
+
 var test=[];
 var randX=0;var randZ=0;var randXm=-10;var randZm=-10;
 var doRec=true;var fullRot=0;var randRm=0;var fullX=0;var fullXm=0;var fullZ=0;var fullZm=0;
@@ -146,8 +142,32 @@ function start(){
       initBuffers(GL);
 
 
+        (function() {
+          var lastTime = 0;
+          var vendors = ['ms', 'moz', 'webkit', 'o'];
+          for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+            window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+                           || window[vendors[x]+'CancelRequestAnimationFrame'];
+          }
 
-      setInterval(function(){drawScene(GL)}, 15);
+          if (!window.requestAnimationFrame)
+            window.requestAnimationFrame = function(callback, element) {
+              var currTime = new Date().getTime();
+              var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+              var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+                timeToCall);
+              lastTime = currTime + timeToCall;
+              return id;
+            };
+
+          if (!window.cancelAnimationFrame)
+            window.cancelAnimationFrame = function(id) {
+              clearTimeout(id);
+            };
+        }());
+        window.requestAnimationFrame(drawScene);
+      
     }
 }
 
@@ -556,12 +576,27 @@ function setTankHealth(shot,helathP){
   },200);
   
 }
+var fps = 30;
+var now;
+var then = Date.now();
+var interval = 1000/fps;
+var delta;
+var delta_websockets = 0.00;
 function drawScene(gl) {
-  now = Date.now();
-  delta = now - then;
+    gl = GL;
+    requestAnimationFrame(drawScene);
      
-  if (delta > interval) {
-    then = now - (delta % interval);
+    now = Date.now();
+    delta = now - then;
+     
+    if (delta > interval) {
+      then = now - (delta % interval);
+
+      Calcs(gl);
+    }
+}
+
+function Calcs(gl){
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctxMap.clearRect(0, 0, ctxMap.canvas.width, ctxMap.canvas.height);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -894,10 +929,9 @@ function drawScene(gl) {
       draw_text(12,"قوة الضربه : "+GameObjs.Player.shotStrong,10,125,"rgba(255,85,85,1)");
       draw_text(12,"الرتبة : "+GameObjs.Player.level,10,140,"rgba(255,215,15,1)");
     }
-  }
+
 
 }
- 
 function createWall(x,z,sizeX,sizeZ,sizeY,ang){
   var size=[sizeX,sizeY,sizeZ];
   var box = new lilObj(objs("box","white",size));
@@ -1205,35 +1239,37 @@ function is_coll(tank,shot){
     }
 }
 
-function updateTankAr(UID,Ar,x,y,health,KillCount){
+function updateTankAr(UID,Ar,x,z,health,KillCount){
   var found = false;
+
   for (var i = GameObjs.TANKs.length - 1; i >= 0; i--) {
     if(UID==GameObjs.TANKs[i].UID){
       GameObjs.TANKs[i].x=x;
-      GameObjs.TANKs[i].y=y;
+      GameObjs.TANKs[i].z=z;
+      
       doMove(GameObjs.TANKs[i],Ar);
       GameObjs.TANKs[i].health = health;
       GameObjs.TANKs[i].KillCount = KillCount;
       found = true;
-      console.log(" found");
+      
       break;
     }
   }
   if(found==false){
     if(UID!=GameObjs.Player.UID){
       getTankData(UID);
-      console.log("not found");
+      
     }
 
   }
 }
 
-function CreateOrUpdateTank(name,teamID,health,KillCount,x,z,UID){
+function CreateOrUpdateTank(name,teamID,health,KillCount,x,z,UID,delta_server){
       if(UID==GameObjs.Player.UID){
         GameObjs.Player.x = x;
         GameObjs.Player.z = z;
         GameObjs.Player.health = health;
-
+        
         GameObjs.Player.KillCount = KillCount;
         return ;
       }
@@ -1241,21 +1277,23 @@ function CreateOrUpdateTank(name,teamID,health,KillCount,x,z,UID){
         if(UID==GameObjs.TANKs[i].UID){
           GameObjs.TANKs[i].x = x;
           GameObjs.TANKs[i].z = z;
+
           GameObjs.TANKs[i].health = health;
           GameObjs.TANKs[i].KillCount = KillCount;
           return ;
         }
       }
-      createTankPos(name,teamID,health,KillCount,x,z,UID);
+      createTankPos(name,teamID,health,KillCount,x,z,UID,delta_server);
 }
 
-function createTankPos(name,teamID,health,KillCount,posX,posZ,UID){
+function createTankPos(name,teamID,health,KillCount,posX,posZ,UID,delta_server){
   if(MESHES_LOADEDr && MESHES_LOADEDg && MESHES_LOADEDb  ){
     var Team = GameObjs.Teams[teamID];
     var tank = new boxObj(Team.TankMesh);
     tank.x=posX;
     tank.z=posZ;
     tank.Team=Team;
+    tank.delta=delta_server;
     tank.KillCount = KillCount;
     tank.shotColor=Team.color;
     this.DefshotColor=Team.color;
@@ -1278,6 +1316,7 @@ function createTank(Team,name){
     tank.x=Team.x-randNumber(260,-100);
     tank.z=Team.z-2+randNumber(260,-100);
     tank.Team=Team;
+    
     tank.shotColor=Team.color;
     this.DefshotColor=Team.color;
     tank.LifeObj=new boxObj(objs("life","green"));
@@ -1299,38 +1338,43 @@ function createTank(Team,name){
 }
 var AR=["right","up","down","left"];
 function doMove(TANKObj,ar){
-  var move_v = 0.18;
+  //var move_v = 0.18;
+
   if(ar=="none"){
     TANKObj.clicked="none";
-
     return ;
   }
   if(ar=="down"){
+    TANKObj.clicked="down";
     TANKObj.addAccR(ar,TANKObj.LR,function(){
       //TANKObj.addAcc(0,0,move_v*-1);
     });
-    TANKObj.clicked="down";
+    
     return ;
   }
   if(ar=="up"){
+    TANKObj.clicked="up";
     TANKObj.addAccR(ar,TANKObj.LR,function(){
       //TANKObj.addAcc(0,0,move_v*-1);
     });
-    TANKObj.clicked="up";
+
+    
     return ;
   }
   if(ar=="left"){
+    TANKObj.clicked="left";
     TANKObj.addAccR(ar,TANKObj.LR,function(){
       //TANKObj.addAcc(move_v*-1,0,0);
     });
-    TANKObj.clicked="left";
+    
     return ;
   }
   if(ar=="right"){
+    TANKObj.clicked="right";
     TANKObj.addAccR(ar,TANKObj.LR,function(){
       //TANKObj.addAcc(move_v,0,0);
     });
-    TANKObj.clicked="right";
+    
     return ;
   }
 
@@ -1415,6 +1459,8 @@ function createNewPlayer(name,teamID,health,KillCount,x,z,UID){
         GameObjs.Player=new boxObj(GameObjs.Teams[teamID].TankMesh);
         GameObjs.Player.Team=GameObjs.Teams[teamID];
         GameObjs.Player.KillCount = KillCount;
+        GameObjs.Player.delta = delta;
+        GameObjs.num_of_frames = fps;
         GameObjs.Player.x=x;
         GameObjs.Player.z=z;
         GameObjs.Player.Name=name;

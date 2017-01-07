@@ -1,5 +1,5 @@
-var ws = new WebSocket('wss://randomattack3d.herokuapp.com', 'echo-protocol');
-//var ws = new WebSocket('ws://127.0.0.1:5000', 'echo-protocol');
+//var ws = new WebSocket('wss://randomattack3d.herokuapp.com', 'echo-protocol');
+var ws = new WebSocket('ws://127.0.0.1:6001', 'echo-protocol');
 ws.sendToString = function(msg){
 
     var msgc = LZString.compressToUTF16(JSON.stringify(msg));
@@ -19,7 +19,8 @@ function startGame(){
             msg:"CreateNewPlayer",
             payload:{
                 'name':document.getElementById('username').value,
-                'teamID':teamID
+                'teamID':teamID,
+                'delta_server':delta
             }
         };
 
@@ -85,7 +86,7 @@ updateTankFunc = function(tank,Ar){
         u:tank.UID,
         a:Ar,
         x:tank.x,
-        y:tank.y,
+        z:tank.z,
         h:tank.health,
         k:tank.KillCount,
     }};
@@ -113,7 +114,7 @@ ws.addEventListener("message", function(e) {
     var msg = e.data;
     
     var msg = LZString.decompressFromUTF16(msg);
-    
+    console.log(msg);
     msg = JSON.parse(msg);
     
     if(msg.msg=="getTeamNum"){
@@ -133,7 +134,8 @@ ws.addEventListener("message", function(e) {
             tank.KillCount,
             tank.x,
             tank.z,
-            tank.UID
+            tank.UID,
+            tank.delta_server
 
         );
         return ;
@@ -159,7 +161,7 @@ ws.addEventListener("message", function(e) {
         if(tank.a=='4')
             tank.a="right"
         
-        updateTankAr(tank.u,tank.a,tank.x,tank.y,tank.h,tank.k);
+        updateTankAr(tank.u,tank.a,tank.x,tank.z,tank.h,tank.k);
         return ;
     }
     if(msg.msg=="recivedShot"){
@@ -184,7 +186,8 @@ ws.addEventListener("message", function(e) {
             tank.KillCount,
             tank.x,
             tank.z,
-            tank.UID
+            tank.UID,
+            tank.delta_server
 
         );
         
@@ -201,7 +204,8 @@ ws.addEventListener("message", function(e) {
             NewPlayer.KillCount,
             NewPlayer.x,
             NewPlayer.z,
-            NewPlayer.UID
+            NewPlayer.UID,
+            NewPlayer.delta_server
         );
         document.getElementById('intro').removeChild(document.getElementById('introinput'));
         return ;

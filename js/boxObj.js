@@ -19,6 +19,7 @@ function boxObj(kc3d){
   this.boxAccYm=0.01;
   this.boxAccZm=0.01;
   this.boxAccRm=8.24;
+
   this.rotate=[1,1,1];
   this.LR=[0,1,0];
   this.UD=[0,0,1];
@@ -36,7 +37,7 @@ function boxObj(kc3d){
   this.clicked="none";
   this.IsOutRang=false;
   this.health=100;
-
+  this.delta=0.033;
   this.HEALTHMAX=100;
   this.minVal=1;
   this.LeftHealth=1;
@@ -48,7 +49,7 @@ function boxObj(kc3d){
   this.Name="";
   this.dead=false;
   this.SXYI=-1;
-  this.MoveingSpeed=0.25;
+  this.MoveingSpeed=8;
   this.level="لاعب جديد";
   this.UID="kcID";
   this.DrawFuncs=[];
@@ -459,18 +460,20 @@ this.calcAccR=function(){
 
 
       this.calcAcc();
-
+      var speed = this.MoveingSpeed;
+      speed = speed*this.delta/1000; 
+      
       if(this.clicked=="left"){
-        this.z-=this.MoveingSpeed;
+        this.z-=speed;
         this.Matrix=Translate([this.x,this.y,this.z],this.Matrix);
       }else if(this.clicked=="right"){
-        this.z+=this.MoveingSpeed;
+        this.z+=speed;
         this.Matrix=Translate([this.x,this.y,this.z],this.Matrix);
       }else if(this.clicked=="up"){
-        this.x+=this.MoveingSpeed;
+        this.x+=speed;
         this.Matrix=Translate([this.x,this.y,this.z],this.Matrix);
       }else if(this.clicked=="down"){
-        this.x-=this.MoveingSpeed;
+        this.x-=speed;
         this.Matrix=Translate([this.x,this.y,this.z],this.Matrix);
       }
       else{
