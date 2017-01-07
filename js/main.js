@@ -1248,7 +1248,7 @@ function updateTankAr(UID,Ar,x,z,health,KillCount){
     if(UID==GameObjs.TANKs[i].UID){
       GameObjs.TANKs[i].x=x;
       GameObjs.TANKs[i].z=z;
-       console.log(GameObjs.TANKs[i].delta);
+      
       doMove(GameObjs.TANKs[i],Ar);
       GameObjs.TANKs[i].health = health;
       GameObjs.TANKs[i].KillCount = KillCount;
