@@ -113,7 +113,7 @@ ws.addEventListener("message", function(e) {
     var msg = e.data;
     
     var msg = LZString.decompressFromUTF16(msg);
-    console.log(msg);
+    
     msg = JSON.parse(msg);
     
     if(msg.msg=="getTeamNum"){
