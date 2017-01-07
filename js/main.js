@@ -928,6 +928,8 @@ function Calcs(gl){
       draw_text(12,"قوه الدبابه : "+GameObjs.Player.health,10,110,"rgba(255,85,85,1)");
       draw_text(12,"قوة الضربه : "+GameObjs.Player.shotStrong,10,125,"rgba(255,85,85,1)");
       draw_text(12,"الرتبة : "+GameObjs.Player.level,10,140,"rgba(255,215,15,1)");
+      draw_text(12,"Player.x : "+GameObjs.Player.x,10,160,"rgba(255,255,255,1)");
+      draw_text(12,"Player.z : "+GameObjs.Player.z,10,170,"rgba(255,255,255,1)");
     }
 
 
@@ -1246,7 +1248,7 @@ function updateTankAr(UID,Ar,x,z,health,KillCount){
     if(UID==GameObjs.TANKs[i].UID){
       GameObjs.TANKs[i].x=x;
       GameObjs.TANKs[i].z=z;
-      
+       console.log(GameObjs.TANKs[i].delta);
       doMove(GameObjs.TANKs[i],Ar);
       GameObjs.TANKs[i].health = health;
       GameObjs.TANKs[i].KillCount = KillCount;
@@ -1293,7 +1295,7 @@ function createTankPos(name,teamID,health,KillCount,posX,posZ,UID,delta_server){
     tank.x=posX;
     tank.z=posZ;
     tank.Team=Team;
-    tank.delta=delta_server;
+    tank.delta=delta;
     tank.KillCount = KillCount;
     tank.shotColor=Team.color;
     this.DefshotColor=Team.color;

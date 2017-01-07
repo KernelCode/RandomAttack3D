@@ -1,5 +1,5 @@
-var ws = new WebSocket('wss://randomattack3d.herokuapp.com', 'echo-protocol');
-//var ws = new WebSocket('ws://127.0.0.1:6001', 'echo-protocol');
+//var ws = new WebSocket('wss://randomattack3d.herokuapp.com', 'echo-protocol');
+var ws = new WebSocket('ws://192.168.1.102:6001', 'echo-protocol');
 ws.sendToString = function(msg){
 
     var msgc = LZString.compressToUTF16(JSON.stringify(msg));

@@ -49,7 +49,7 @@ function boxObj(kc3d){
   this.Name="";
   this.dead=false;
   this.SXYI=-1;
-  this.MoveingSpeed=8;
+  this.MoveingSpeed=0.25;
   this.level="لاعب جديد";
   this.UID="kcID";
   this.DrawFuncs=[];
@@ -461,7 +461,7 @@ this.calcAccR=function(){
 
       this.calcAcc();
       var speed = this.MoveingSpeed;
-      speed = speed*this.delta/1000; 
+      //speed = speed*this.delta/1000; 
       
       if(this.clicked=="left"){
         this.z-=speed;
