@@ -1,6 +1,11 @@
 var ws = new WebSocket('wss://randomattack3d.herokuapp.com', 'echo-protocol');
-//var ws = new WebSocket('ws://192.168.1.102:6001', 'echo-protocol');
+//var ws = new WebSocket('ws://127.0.0.1:5000', 'echo-protocol');
+ws.sendToString = function(msg){
 
+    var msgc = LZString.compressToUTF16(JSON.stringify(msg));
+
+    this.send(msgc);
+}
 var teamID = 0;
 
 var is_socket_open=false;
@@ -10,18 +15,15 @@ function selectTeam(num){
 function startGame(){
 
     if(is_socket_open){
-        msg = JSON.stringify({
+        msg = {
             msg:"CreateNewPlayer",
             payload:{
                 'name':document.getElementById('username').value,
                 'teamID':teamID
             }
-        });
-       
+        };
 
-        msg = LZString.compress(msg);
-
-        ws.send(msg);
+        ws.sendToString(msg);
 
     }else{
         alert("خطاء في الاتصال بالسيرفر حاولاً مره اخرى!");
@@ -37,9 +39,18 @@ updateHealth = function(tank){
         UID:tank.UID,
         health:tank.health
     }};
-    msg = LZString.compress(JSON.stringify(msg));
 
-    ws.send(msg);
+    ws.sendToString(msg);
+}
+
+sendNoneMove = function(tank){
+    if(tank==null)
+        return ;
+    var msg = {'msg':"sendNoneMove",'payload':{
+        UID:tank.UID
+    }};
+    
+    ws.sendToString(msg);
 }
 sendShot = function(tank){
     if(tank==null)
@@ -48,38 +59,50 @@ sendShot = function(tank){
         UID:tank.UID
     }};
     
-    msg = LZString.compress(JSON.stringify(msg));
-    ws.send(msg);
+    ws.sendToString(msg);
+}
+getTankData = function(UID){
+    var msg = {'msg':"getTankData",'payload':{
+        UID:UID
+    }};
+    
+    ws.sendToString(msg);
 }
 updateTankFunc = function(tank,Ar){
     if(tank == null)
         return ;
+
+    if(Ar=="up")
+        Ar='1'
+    if(Ar=="down")
+        Ar='2'
+    if(Ar=="left")
+        Ar='3'
+    if(Ar=="right")
+        Ar='4'
+
     var msg = {'msg':"updateTankAr",'payload':{
-        UID:tank.UID,
-        Ar:Ar,
+        u:tank.UID,
+        a:Ar,
         x:tank.x,
         y:tank.y,
-        health:tank.health,
-        KillCount:tank.KillCount,
+        h:tank.health,
+        k:tank.KillCount,
     }};
-    msg  = JSON.stringify(msg);
-    
-    msg = LZString.compress(msg);
-   
-    ws.send(msg);
+
+    ws.sendToString(msg);
 }
 ws.addEventListener("open",function(e){
     
     is_socket_open=true;
     
-    msg = JSON.stringify({
+    msg = {
         msg:"getTeamNum",
         payload:{}
-    });
+    };
 
-    msg = LZString.compress(msg);
 
-    ws.send(msg);
+    ws.sendToString(msg);
 
 });
 window.addEventListener("beforeunload", function(e){
@@ -88,14 +111,36 @@ window.addEventListener("beforeunload", function(e){
 ws.addEventListener("message", function(e) {
     // The data is simply the message that we're sending back
     var msg = e.data;
-    var msg = LZString.decompress(msg);
-    var msg = JSON.parse(msg);
+    
+    var msg = LZString.decompressFromUTF16(msg);
+    console.log(msg);
+    msg = JSON.parse(msg);
     
     if(msg.msg=="getTeamNum"){
         var teams = msg.payload;
         document.getElementById('players_0').textContent =teams.teams[0];
         document.getElementById('players_1').textContent =teams.teams[1];
         document.getElementById('players_2').textContent =teams.teams[2];
+        return ;
+    }
+    if(msg.msg=="getTankData"){
+        var tank = msg.payload;
+        CreateOrUpdateTank(
+
+            tank.name,
+            tank.teamID,
+            tank.health,
+            tank.KillCount,
+            tank.x,
+            tank.z,
+            tank.UID
+
+        );
+        return ;
+    }
+    if(msg.msg=="sendNoneMove"){
+        var tank = msg.payload;
+        NoneMove(tank.UID);
         return ;
     }
     if(msg.msg=="updateHealth"){
@@ -105,12 +150,26 @@ ws.addEventListener("message", function(e) {
     }
     if(msg.msg=="updateTankAr"){
         var tank = msg.payload;
-        updateTankAr(tank.UID,tank.Ar,tank.x,tank.y,tank.health,tank.KillCount);
+        if(tank.a=='1')
+            tank.a="up"
+        if(tank.a=='2')
+            tank.a="down"
+        if(tank.a=='3')
+            tank.a="left"
+        if(tank.a=='4')
+            tank.a="right"
+        
+        updateTankAr(tank.u,tank.a,tank.x,tank.y,tank.h,tank.k);
         return ;
     }
     if(msg.msg=="recivedShot"){
         var tank = msg.payload;
         recivedShot(tank.UID);
+        return ;
+    }
+    if(msg.msg==""){
+        var tank = msg.payload;
+        NoneMove(tank.UID);
         return ;
     }
     

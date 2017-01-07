@@ -1206,6 +1206,7 @@ function is_coll(tank,shot){
 }
 
 function updateTankAr(UID,Ar,x,y,health,KillCount){
+  var found = false;
   for (var i = GameObjs.TANKs.length - 1; i >= 0; i--) {
     if(UID==GameObjs.TANKs[i].UID){
       GameObjs.TANKs[i].x=x;
@@ -1213,8 +1214,17 @@ function updateTankAr(UID,Ar,x,y,health,KillCount){
       doMove(GameObjs.TANKs[i],Ar);
       GameObjs.TANKs[i].health = health;
       GameObjs.TANKs[i].KillCount = KillCount;
+      found = true;
+      console.log(" found");
       break;
     }
+  }
+  if(found==false){
+    if(UID!=GameObjs.Player.UID){
+      getTankData(UID);
+      console.log("not found");
+    }
+
   }
 }
 
@@ -1223,6 +1233,7 @@ function CreateOrUpdateTank(name,teamID,health,KillCount,x,z,UID){
         GameObjs.Player.x = x;
         GameObjs.Player.z = z;
         GameObjs.Player.health = health;
+
         GameObjs.Player.KillCount = KillCount;
         return ;
       }
@@ -1289,6 +1300,11 @@ function createTank(Team,name){
 var AR=["right","up","down","left"];
 function doMove(TANKObj,ar){
   var move_v = 0.18;
+  if(ar=="none"){
+    TANKObj.clicked="none";
+
+    return ;
+  }
   if(ar=="down"){
     TANKObj.addAccR(ar,TANKObj.LR,function(){
       //TANKObj.addAcc(0,0,move_v*-1);
@@ -1317,6 +1333,7 @@ function doMove(TANKObj,ar){
     TANKObj.clicked="right";
     return ;
   }
+
 }
 
 
@@ -1814,6 +1831,15 @@ function recivedShot(UID){
   }
   
   
+}
+
+function NoneMove(UID){
+  for (var i = GameObjs.TANKs.length - 1; i >= 0; i--) {
+    if(UID==GameObjs.TANKs[i].UID){
+      GameObjs.TANKs[i].clicked="none";
+      break;
+    }
+  }
 }
 function creatshotfunc(){
 

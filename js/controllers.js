@@ -9,17 +9,26 @@ var mainMapY=0;
 var MapSpeed=0.25;
 var camMapX=0;
 var camMapY=0;
+
+var clciked = "up";
 function setController(Player,creatshotfunc,command){
 document.onkeyup  = function(e){
-      
-      //Player.clicked="none";
+    if(clciked=="up")
+      return ;
+
+    clciked="up";
+    sendNoneMove(Player);
+
+    Player.clicked="none";
       
 }
 document.onclick=function(){
   creatshotfunc();
 }
 document.onkeydown  = function(e){
-
+  if(clciked=="down")
+   return ;
+  
   switch(e.which){
       case 40: //down
       //  Player.clicked="down";
@@ -45,6 +54,7 @@ document.onkeydown  = function(e){
 
       break;
       case 83: //down s
+        clciked="down";
         mainMapY-=MapSpeed;
         if(Player.LastcamRotAniVal==0){
           Player.clicked="right";
@@ -100,6 +110,7 @@ document.onkeydown  = function(e){
         //FrontBack-=0.7;
       break;
       case 87: //up w 
+        clciked="down";
         mainMapY+=MapSpeed;
         if(Player.LastcamRotAniVal==0){
           Player.clicked="left";
@@ -150,6 +161,7 @@ document.onkeydown  = function(e){
       //LeftRight-=0.7;
       break;
       case 68: //right d
+        clciked="down";
         mainMapX-=MapSpeed;
         if(Player.LastcamRotAniVal==0){
           Player.clicked="up";
@@ -203,6 +215,7 @@ document.onkeydown  = function(e){
         //LeftRight+=0.7;
       break;
       case 65: //left a
+        clciked="down";
         mainMapX+=MapSpeed;
         if(Player.LastcamRotAniVal==0){
           Player.clicked="down";
