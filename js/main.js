@@ -2,10 +2,9 @@
 var CANVAS;
 // GL context
 var GL;
+
+//all game objects
 var GameObjs={};
-//get from server
-var UID="KC-";
-var UIDI=0;
 GameObjs.TANKs=[];
 GameObjs.Player=null;
 GameObjs.SHOTs= []
@@ -18,8 +17,16 @@ GameObjs.ExplotionsBig=[];
 GameObjs.Walls=[];
 GameObjs.Msgs=[];
 GameObjs.DoomDayFs=[];
+
+//main matrix
 mvMatrix=Matrix.I(4);
+
+
+//game time 
 var StartedIn =(new Date).getTime()/1000;
+
+
+//load meshes and buffers vars
 var MESHES_LOADEDr=false;
 var MESHES_LOADEDg=false;
 var MESHES_LOADEDb=false;
@@ -31,36 +38,41 @@ var MESHES_LOADEDTeamHouseBlue=false;
 var MESHES_LOADEDTeamHouseRed=false;
 var MESHES_LOADEDTeamHouseGreen=false;
 var MESHES_LOADEDDoomDay=false;
-//var MESHES_LOADEDTre=false;
 var dtankMesh;
 var RedtankMesh;
 var GreentankMesh;
 var BluetankMesh;
-var shotBufferRed=null;
-var shotBufferBlue=null;
-var shotBufferGreen=null;
-var shotBufferYellow=null;
 var YellowBoxMesh=null;
 var GreenBoxMesh=null;
 var RedBoxMesh=null;
 var BlueBoxMesh=null;
+var shotBufferRed=null;
+var shotBufferBlue=null;
+var shotBufferGreen=null;
+var shotBufferYellow=null;
+
+
+
+//2d map and text
 var ctx;
 var ctxMap;
-
 var textCanvas;
 var MapCanvas;
-
 var once=false;
 
 
-var test=[];
+//cam vars
 var randX=0;var randZ=0;var randXm=-10;var randZm=-10;
 var doRec=true;var fullRot=0;var randRm=0;var fullX=0;var fullXm=0;var fullZ=0;var fullZm=0;
-function deleteObject(array,index){
 
+
+//delete object from array
+function deleteObject(array,index){
   delete(array[index]);
   array.splice(index, 1);
 }
+
+//team class
 function Team(){
   this.x=0;
   this.z=0;
@@ -69,6 +81,9 @@ function Team(){
   this.ID;
   this.color;
 }
+
+
+//rebuild tanks array
 function rebuild(){
   var tary=[];
   for(var itank =0 ; itank < GameObjs.TANKs.length; itank ++){
@@ -93,6 +108,8 @@ setInterval(function(){
 
 },1000);
 
+
+//rebuild shots array
 function rebuildS(){
   var tary=[];
   for(var igs =0 ; igs < GameObjs.SHOTs.length; igs ++){
@@ -103,28 +120,41 @@ function rebuildS(){
   GameObjs.SHOTs=tary;
 
 }
+
+
+//get time in secs or ms
 function getSecs(ms){
   if(ms)
     return (new Date().getTime() );
   else
     return (new Date().getTime() / 1000);
 }
+
+//to limit shoting 
 var shots_time=getSecs(true);
 var shots_times=getSecs(true);
 
+
+//set random camera
 function randomCam(){
     randX=randNumber(7,-6);
     randZ=randNumber(7,-6);
 }
 
+//get random number
 function randNumber(max,min){
   return Math.floor((Math.random()*max))+min;
 }
+
+//get random number float
 function randNumberF(max,min){
   return (Math.random()*max)+min;
 }
 
+
+//start the game
 function start(){
+
   // Getting Canvas Dom
   CANVAS = document.getElementById("game");
   CANVAS.width=window.innerWidth;
@@ -172,7 +202,7 @@ function start(){
 }
 
 
-
+//initialize webgl
 function initWebGL(canvas){
 
   GL = null;
@@ -198,6 +228,8 @@ function initWebGL(canvas){
 
 
 }
+
+//disable tank speed
 function disableSpeed(tank){
   if(tank.shotSpeed!=tank.DefshotSpeed){
     setTimeout(function(){
@@ -206,6 +238,8 @@ function disableSpeed(tank){
   }
 
 }
+
+//disable tank shot strong
 function disableStrong(tank){
 
   if(tank.shotStrong!=tank.DefshotStrong){
@@ -215,6 +249,8 @@ function disableStrong(tank){
     },9000);
   }
 }
+
+//create random helpers
 function createRandomHelpers(){
   
     setNewFix(randNumber(150,-10),randNumber(150,-10));
@@ -230,6 +266,7 @@ function createRandomHelpers(){
 
 }
 
+//play animation
 function playAni(tankXZ){
 
   
@@ -241,13 +278,14 @@ function playAni(tankXZ){
       x-=0.001;
     }
 
-    //_this.Matrix=Rotate(_this.rt, [0, 1, 0],_this.Matrix);
 
   });
 
-  //GameObjs.TANKs.push(tank);
+
 }
 
+
+//deleting msg from screen 
 function deleteMsg(id){
   var el =document.getElementById(id);
   el.style.opacity=0;
@@ -257,6 +295,8 @@ function deleteMsg(id){
   },1000);
   
 }
+
+//add msg to screen 
 function addMsg(shot,msg){
   var time = (new Date().getTime());
   var name = shot.Name;
@@ -278,21 +318,8 @@ function addMsg(shot,msg){
     
   },300);
 }
-/*
 
-*RandomAttack* >100k tanks
-*NINJA* >20k tanks
-*MASTER* >10k tanks
-*Presdnet* >1k tanks
-*CAPTEN* >500 tanks
-*GOVNER* > 200 tanks
-*Worrior* > 100 tanks
-*CORNOL* > 50 tanks
-*OFFCIER* > 20 tanks
-*جندي* > 2 tanks
-*New Player* 0 tanks
-
-*/
+//set tank level
 function setLevel(tank,level){
 
     switch(level){
@@ -441,14 +468,11 @@ function setLevel(tank,level){
     }
 
     
-
-
-
-    
-
 }
-//must test
 
+
+
+//add kill count
 function addKillCount(shot,level,preCount){
   setTimeout(function(){
     if(shot.tankUDI==GameObjs.Player.UID){
@@ -558,6 +582,8 @@ function addKillCount(shot,level,preCount){
   },200);
   
 }
+
+//set tank health
 function setTankHealth(shot,helathP){
   
   setTimeout(function(){
@@ -576,12 +602,17 @@ function setTankHealth(shot,helathP){
   },200);
   
 }
+
+//calc fps and delta time 
 var fps = 30;
 var now;
 var then = Date.now();
 var interval = 1000/fps;
 var delta;
 var delta_websockets = 0.00;
+
+
+//start rendring and drawing objs
 function drawScene(gl) {
     gl = GL;
     requestAnimationFrame(drawScene);
@@ -596,6 +627,8 @@ function drawScene(gl) {
     }
 }
 
+
+//calc coll and tank hits
 function Calcs(gl){
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctxMap.clearRect(0, 0, ctxMap.canvas.width, ctxMap.canvas.height);
@@ -911,11 +944,6 @@ function Calcs(gl){
     //geo
     GameObjs.geo.draw(mvMatrix);
 
-    //GameObjs.Tre.setMatrix(mvMatrix);
-    //GameObjs.Tre.draw(mvMatrix);
-
-    //map
-    //draw_cir(120,120,"#ff000",20);
 
     //menu
     if(GameObjs.Player!=null){
@@ -928,12 +956,13 @@ function Calcs(gl){
       draw_text(12,"قوه الدبابه : "+GameObjs.Player.health,10,110,"rgba(255,85,85,1)");
       draw_text(12,"قوة الضربه : "+GameObjs.Player.shotStrong,10,125,"rgba(255,85,85,1)");
       draw_text(12,"الرتبة : "+GameObjs.Player.level,10,140,"rgba(255,215,15,1)");
-      draw_text(12,"Player.x : "+GameObjs.Player.x,10,160,"rgba(255,255,255,1)");
-      draw_text(12,"Player.z : "+GameObjs.Player.z,10,170,"rgba(255,255,255,1)");
+
     }
 
 
 }
+
+//create a wall
 function createWall(x,z,sizeX,sizeZ,sizeY,ang){
   var size=[sizeX,sizeY,sizeZ];
   var box = new lilObj(objs("box","white",size));
@@ -946,6 +975,8 @@ function createWall(x,z,sizeX,sizeZ,sizeY,ang){
   GameObjs.Walls.push(box);
   delete(box);
 }
+
+//create explotions
 function createExplotions(x,z,shot){
 
   var rs=0.2;
@@ -1024,6 +1055,8 @@ function createExplotions(x,z,shot){
 
 }
 
+
+//create explotions big
 function createExplotionsBig(x,z,color){
 
   var box=YellowBoxMesh;
@@ -1130,9 +1163,8 @@ function createExplotionsBig(x,z,color){
   }
 
 }
-function drawTextIn(tank,text,size,matrix){
- 
-}
+
+//draw_Cir for 2d map
 function draw_cir(x,y,color,size){
   ctxMap.fillStyle=color;
   ctxMap.beginPath();
@@ -1145,11 +1177,16 @@ function draw_cir(x,y,color,size){
   ctxMap.fill();
 
 }
+
+
+//draw text for 2d map
 function draw_text (size,text,posX,posY,col){
   ctx.font=size+"px monospace";
   ctx.fillStyle=col;
   ctx.fillText(text,posX,posY);
 }
+
+
 setTimeout(function(){
   fullRot=90;
   fullX=10;
@@ -1157,8 +1194,10 @@ setTimeout(function(){
 },3000);
 
 
-
+//cam position in start
 var hcam=-100;
+
+//set camera vars for player
 function doCam(Player){
   //camera
   mvMatrix=Matrix.I(4);
@@ -1241,6 +1280,8 @@ function is_coll(tank,shot){
     }
 }
 
+
+//update tank position
 function updateTankAr(UID,Ar,x,z,health,KillCount){
   var found = false;
 
@@ -1266,6 +1307,8 @@ function updateTankAr(UID,Ar,x,z,health,KillCount){
   }
 }
 
+
+//create or update tank 
 function CreateOrUpdateTank(name,teamID,health,KillCount,x,z,UID,delta_server){
       if(UID==GameObjs.Player.UID){
         GameObjs.Player.x = x;
@@ -1288,6 +1331,8 @@ function CreateOrUpdateTank(name,teamID,health,KillCount,x,z,UID,delta_server){
       createTankPos(name,teamID,health,KillCount,x,z,UID,delta_server);
 }
 
+
+//create or update tank with position
 function createTankPos(name,teamID,health,KillCount,posX,posZ,UID,delta_server){
   if(MESHES_LOADEDr && MESHES_LOADEDg && MESHES_LOADEDb  ){
     var Team = GameObjs.Teams[teamID];
@@ -1312,35 +1357,14 @@ function createTankPos(name,teamID,health,KillCount,posX,posZ,UID,delta_server){
   }
 
 }
-function createTank(Team,name){
-  if(MESHES_LOADEDr && MESHES_LOADEDg && MESHES_LOADEDb  ){
-    var tank = new boxObj(Team.TankMesh);
-    tank.x=Team.x-randNumber(260,-100);
-    tank.z=Team.z-2+randNumber(260,-100);
-    tank.Team=Team;
-    
-    tank.shotColor=Team.color;
-    this.DefshotColor=Team.color;
-    tank.LifeObj=new boxObj(objs("life","green"));
-    tank.setHealth(100);
-    tank.Name=name;
-    tank.UID+=UID+(new Date().getTime())+(UIDI++);
 
 
-    GameObjs.TANKs.push(tank);
-    RndomMove(GameObjs.TANKs.length-1);
-
-
-    RndomShot(GameObjs.TANKs.length-1);
-
-    delete(tank);
-    
-  }
-
-}
+//POSITIONs
 var AR=["right","up","down","left"];
+
+//move tank to ? AR
+//
 function doMove(TANKObj,ar){
-  //var move_v = 0.18;
 
   if(ar=="none"){
     TANKObj.clicked="none";
@@ -1349,7 +1373,7 @@ function doMove(TANKObj,ar){
   if(ar=="down"){
     TANKObj.clicked="down";
     TANKObj.addAccR(ar,TANKObj.LR,function(){
-      //TANKObj.addAcc(0,0,move_v*-1);
+
     });
     
     return ;
@@ -1357,7 +1381,7 @@ function doMove(TANKObj,ar){
   if(ar=="up"){
     TANKObj.clicked="up";
     TANKObj.addAccR(ar,TANKObj.LR,function(){
-      //TANKObj.addAcc(0,0,move_v*-1);
+
     });
 
     
@@ -1366,7 +1390,7 @@ function doMove(TANKObj,ar){
   if(ar=="left"){
     TANKObj.clicked="left";
     TANKObj.addAccR(ar,TANKObj.LR,function(){
-      //TANKObj.addAcc(move_v*-1,0,0);
+
     });
     
     return ;
@@ -1374,7 +1398,7 @@ function doMove(TANKObj,ar){
   if(ar=="right"){
     TANKObj.clicked="right";
     TANKObj.addAccR(ar,TANKObj.LR,function(){
-      //TANKObj.addAcc(move_v,0,0);
+
     });
     
     return ;
@@ -1383,79 +1407,7 @@ function doMove(TANKObj,ar){
 }
 
 
-
-function RndomShot(i){
-  randTime=randNumber(7000,3000);
-  setInterval(function(){
-    if(i<GameObjs.TANKs.length && i>=0)
-        createShot(0,0,GameObjs.TANKs[i],GameObjs.TANKs[i].shotColor);
-  },randTime);
-}
-var num = 0;
-function setLeftRightInterval(tank,team,randTime){
-    setInterval(function(){
-    if(tank.z<team.z){
-      
-        doMove(tank,AR[0]);
-       
-     
-    }else{
-      
-        doMove(tank,AR[3]);
-        
-      
-    }
-  },randTime);
-}
-function setUpDownInterval(tank,team,randTime){
-    setInterval(function(){
-    if(tank.x<team.x){
-      
-        doMove(tank,AR[1]);
-       
-     
-    }else{
-      
-        doMove(tank,AR[2]);
-        
-      
-    }
-  },randTime);
-}
-function RndomMove(itank){
-  if(GameObjs.TANKs.length<=1)
-    return ;
-  var tank=GameObjs.TANKs[itank];
-  randTime=randNumber(1200,500);
-  if(tank.Team.ID=="Team1"){
-    setLeftRightInterval(tank,GameObjs.Teams[1],randTime);
-    randTime=randNumber(1200,500);
-    setUpDownInterval(tank,GameObjs.Teams[1],randTime);
-  }
-  if(tank.Team.ID=="Team2"){
-    setLeftRightInterval(tank,GameObjs.Teams[0],randTime);
-    randTime=randNumber(1200,500);
-    setUpDownInterval(tank,GameObjs.Teams[0],randTime);
-  }
-  if(tank.Team.ID=="Team3"){
-    setLeftRightInterval(tank,GameObjs.Teams[1],randTime);
-    randTime=randNumber(1200,500);
-    setUpDownInterval(tank,GameObjs.Teams[1],randTime);
-  }
-
-  return ;
-  
-  setInterval(function(){
-    
-    num++;
-    if(num>AR.length-1)
-      num=0;
-
-    doMove(tank,AR[num]);
-  },randTime);
-}
-
-
+//create new player
 function createNewPlayer(name,teamID,health,KillCount,x,z,UID){
 
         GameObjs.Player=new boxObj(GameObjs.Teams[teamID].TankMesh);
@@ -1486,6 +1438,7 @@ function createNewPlayer(name,teamID,health,KillCount,x,z,UID){
         setController(GameObjs.Player,creatshotfunc,commandFunc);
 }
 
+//start checking and creating teams intervals
 function setIntervals(){
   setInterval(function(){
     if(doRec)
@@ -1553,6 +1506,8 @@ function setIntervals(){
   },2000);
 }
 
+
+//helpers and fixes objs drawing functions
 function setDrawFix(obj){
   obj.setDraw(function(_this){
         _this.Matrix=Translate([
@@ -1566,6 +1521,7 @@ function setDrawFix(obj){
       
    
 }
+//helpers and fixes objs drawing functions
 function setNewFix(x,z){
 
   if(MESHES_LOADEDf){
@@ -1581,6 +1537,8 @@ function setNewFix(x,z){
 
   }
 }
+
+//set new speed shot
 function setNewSpeedShot(x,z){
   if(MESHES_LOADEDspeedShot){
     var speedShot=new boxObj(GameObjs.SpeedShot);
@@ -1595,6 +1553,8 @@ function setNewSpeedShot(x,z){
 
   
 }
+
+//set strong  shot
 function setNewStrongShot(x,z){
   if(MESHES_LOADEDStrongShot){
     var strongShot=new boxObj(GameObjs.StrongShot);
@@ -1609,6 +1569,8 @@ function setNewStrongShot(x,z){
 
   
 }
+
+//set big boom  shot
 function setNewBigBoom(x,z){
   if(MESHES_LOADEDBigBoom){
     var bigBoom=new boxObj(GameObjs.BigBoom);
@@ -1623,41 +1585,8 @@ function setNewBigBoom(x,z){
 
   
 }
-function setTeamHouse(Team,OBJ){
-  //if(MESHES_LOADEDTeamHouseBlue && MESHES_LOADEDTeamHouseRed && MESHES_LOADEDTeamHouseGreen){
-    var TeamHouse=new boxObj(OBJ);
-    TeamHouse.Team=Team;
-    TeamHouse.x=Team.x;
-    TeamHouse.z=Team.z;
-    TeamHouse.size=9;
-    TeamHouse.rt=0;
-    TeamHouse.LifeObj=new boxObj(objs("life","green"));
-    TeamHouse.LifeObj.minVal=4;
-    TeamHouse.minVal=4;
-    TeamHouse.LifeObj.HEALTHMAX=1000;
-    TeamHouse.LeftHealth=2.5;
-    TeamHouse.UPHealth=2.5;
-    TeamHouse.sizeHelath=[0.4,0.4,0.4];
-    TeamHouse.FrontHealth=1;
-    TeamHouse.setHealth(1000);
-    GameObjs.houses.push(TeamHouse);
 
-  //}
-
-  
-}
-
-
-function createHome(x,z,size){
-  createWall(x+0,z+0,30,1,size,[1,0,0,0]);
-  createWall(x+60,z+0,30,1,size,[1,0,0,0]);
-  createWall(x+-29,z+29,30,1,size,[0,1,0,90]);
-  createWall(x+-29,z+100,30,1,size,[0,1,0,90]);
-  createWall(x+0,z+129,30,1,size,[0,1,0,0]);
-  createWall(x+60,z+129,30,1,size,[0,1,0,0]);
-  createWall(x+89,z+100,30,1,size,[0,1,0,90]);
-  createWall(x+89,z+30,30,1,size,[0,1,0,90]);
-}
+//inti webGL buffers
 function initBuffers(gl){
   var size = 0;
   var sizeX = 305;
@@ -1714,19 +1643,7 @@ function initBuffers(gl){
   shotBufferBlue=objs("shot","blue");
   shotBufferGreen=objs("shot","green");
   shotBufferYellow=objs("shot","yellow");
-  /*
-  objs("Tre","floorText",function(TreObj){
-    MESHES_LOADEDTre=true;
-    GameObjs.Tre=TreObj;
-    var s = new boxObj(TreObj) ;
-    s.x=20;
-    s.z=20;
-    s.y=-5;
-    GameObjs.Tre=s;
-  });*/
-  //createHome(0,0,12);
-  //createHome(120,0,12);
-  //createHome(-120,0,12);
+
   objs("DoomDay","white",function(doomObj){
     MESHES_LOADEDDoomDay=true;
     GameObjs.DoomDay=doomObj;
@@ -1782,12 +1699,10 @@ function initBuffers(gl){
   GameObjs.geo=objs("geo","geo");
 
 
-
-  //randNumber(-10,-20),randNumber(10,-10),"Team3",RedtankMesh,"yellow"
-  
 }
 
 
+//create shot objs
 function createShot(x,z,P,color){
 
   P.health-=2;
@@ -1865,6 +1780,7 @@ function createShot(x,z,P,color){
   delete(s);
 }
 
+//create shot based on UID of tank
 function recivedShot(UID){
   //tank have
   if(UID==GameObjs.Player.UID){
@@ -1881,14 +1797,19 @@ function recivedShot(UID){
   
 }
 
-function NoneMove(UID){
+//stop moving tank based on UID
+function NoneMove(UID,x,z){
   for (var i = GameObjs.TANKs.length - 1; i >= 0; i--) {
     if(UID==GameObjs.TANKs[i].UID){
       GameObjs.TANKs[i].clicked="none";
+      GameObjs.TANKs[i].x=x;
+      GameObjs.TANKs[i].z=z;
       break;
     }
   }
 }
+
+//create shot function
 function creatshotfunc(){
 
   if(shots_time+800<getSecs(true)){
@@ -1901,6 +1822,7 @@ function creatshotfunc(){
   }
 }
 
+//set command function based on id key
 function commandFunc(id){
 
 }

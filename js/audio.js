@@ -1,12 +1,7 @@
-/*var sounds={'shot1':{play:getSecs(true)},
-		'shot1E':{play:getSecs(true)},
-		'shot2':{play:getSecs(true)},
-		'shot2E':{play:getSecs(true)},
-		'shotBig':{play:getSecs(true)},
-		'shotBigP':{play:getSecs(true)},
-		'starUp':{play:getSecs(true)},
-		'kill':{play:getSecs(true)}
-};*/
+/*
+	define path of sounds and sound lib to play with volume 
+
+ */
 var path="/RandomAttack3D/sounds/";
 var lib=
 	{

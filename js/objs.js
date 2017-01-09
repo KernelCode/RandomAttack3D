@@ -1,43 +1,64 @@
-var TANKs=[];
-var Shots=[];
+/*
+	objs file to load and define meshes
+
+ */
+//main texture value
 var GameTexturesObj=0 ;
+
+//main tank mesh
 var tankMesh=0;
+
+//create Kc3D object after loading and parsing the .obj file
 function GOBJ(gl,vrcs,normals,indcs,text,col,ID,shaderfs){
 
         var g2 = new KC3D(gl);
 
         if(shaderfs){
+
         	g2.setupShader([shaderfs,"shader-vs"]);
+
         }else
          g2.setupShader(["shader-fs","shader-vs"]);
+
         if(vrcs)
           g2.vrcs=g2.buildBuffer(g2.vrcs,gl.ARRAY_BUFFER,vrcs,vrcs.length);
+
         if(normals)
           g2.normals=g2.buildBuffer(g2.normals,gl.ARRAY_BUFFER,normals,normals.length);
+
         if(indcs)
           g2.indcs=g2.buildBuffer(g2.indcs,gl.ELEMENT_ARRAY_BUFFER,indcs,indcs.length);
+
         if(text){
 
           g2.text=g2.buildBuffer(g2.text,gl.ARRAY_BUFFER,text,text.length);
+
           GameTexturesObj.gl=gl;
+
           g2.setTexure(GameTexturesObj,col);
         
-          
-          
-          
         }
+
         g2.setUpSettings();
         
         return g2;
 }
 
+//load/create object file with id and type
 function objs(type,ID,func,vrcsSize){
+
 	if(GameTexturesObj==0){
+
 		GameTexturesObj =new GameTextures(GL);
+
 	}
+
 	if(type=="life"){
+
 		var sizeX=0.9;
+
 		var sizeY=0.2;
+
 		var sizeZ=0.2;
 
 		var TextVal=0.1;
@@ -158,6 +179,7 @@ function objs(type,ID,func,vrcsSize){
 			      1.0,  1.0,
 			      0.0,  1.0
 	    ],ID,ID,"shader-fs"
+	    
 	    );
 	}
 	if(type=="shot"){

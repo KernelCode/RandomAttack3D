@@ -1,3 +1,5 @@
+// get shaders form html 
+// got it from : [source]
 
 function getShader(gl, id) {
   var shaderScript = document.getElementById(id);
