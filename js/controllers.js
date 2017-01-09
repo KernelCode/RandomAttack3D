@@ -15,7 +15,7 @@ var is_up=true;
 var is_right=true;
 var mainMapX=0;
 var mainMapY=0;
-var MapSpeed=0.25;
+var MapSpeed=0.35;
 var camMapX=0;
 var camMapY=0;
 

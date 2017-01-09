@@ -333,7 +333,7 @@ function setLevel(tank,level){
         objs("جندي","red",function(tankObj){
           tankObj.textNames[0]=tank.Team.color.toLowerCase();
           tank.setNewTank(tankObj);
-          tank.MoveingSpeed=0.27;
+          //tank.MoveingSpeed=0.27;
           tank.sizeX=1;
           tank.sizeZ=1;
           tank.DefshotStrong=58;
@@ -346,7 +346,7 @@ function setLevel(tank,level){
         objs("OFFCIER","red",function(tankObj){
           tankObj.textNames[0]=tank.Team.color.toLowerCase();
           tank.setNewTank(tankObj);
-          tank.MoveingSpeed=0.27;
+
           tank.sizeX=1.3;
           tank.sizeZ=1.3;
           tank.DefshotStrong=62;
@@ -359,7 +359,7 @@ function setLevel(tank,level){
         objs("CORNOL","red",function(tankObj){
           tankObj.textNames[0]=tank.Team.color.toLowerCase();
           tank.setNewTank(tankObj);
-          tank.MoveingSpeed=0.27;
+
           tank.sizeX=1.6;
           tank.sizeZ=1.6;
           tank.DefshotStrong=66;
@@ -372,7 +372,7 @@ function setLevel(tank,level){
         objs("Worrior","red",function(tankObj){
           tankObj.textNames[0]=tank.Team.color.toLowerCase();
           tank.setNewTank(tankObj);
-          tank.MoveingSpeed=0.27;
+
           tank.sizeX=1.8;
           tank.sizeZ=1.8;
           tank.DefshotStrong=69;
@@ -385,7 +385,7 @@ function setLevel(tank,level){
         objs("GOVNER","red",function(tankObj){
           tankObj.textNames[0]=tank.Team.color.toLowerCase();
           tank.setNewTank(tankObj);
-          tank.MoveingSpeed=0.3;
+          //tank.MoveingSpeed=0.3;
           tank.sizeX=2;
           tank.sizeZ=2;
           tank.DefshotStrong=75;
@@ -398,7 +398,7 @@ function setLevel(tank,level){
         objs("CAPTEN","red",function(tankObj){
           tankObj.textNames[0]=tank.Team.color.toLowerCase();
           tank.setNewTank(tankObj);
-          tank.MoveingSpeed=0.33;
+          //tank.MoveingSpeed=0.33;
           tank.sizeX=2.3;
           tank.sizeZ=2.3;
           tank.DefshotStrong=80;
@@ -411,7 +411,7 @@ function setLevel(tank,level){
         objs("Presdnet","red",function(tankObj){
           tankObj.textNames[0]=tank.Team.color.toLowerCase();
           tank.setNewTank(tankObj);
-          tank.MoveingSpeed=0.35;
+          //tank.MoveingSpeed=0.35;
           tank.sizeX=2.6;
           tank.sizeZ=2.6;
           tank.DefshotStrong=85;
@@ -425,7 +425,7 @@ function setLevel(tank,level){
           
           tankObj.textNames[0]=tank.Team.color.toLowerCase();
           tank.setNewTank(tankObj);
-          tank.MoveingSpeed=0.36;
+          //tank.MoveingSpeed=0.36;
           tank.sizeX=3;
           tank.sizeZ=3;
           tank.DefshotStrong=105;
@@ -439,7 +439,7 @@ function setLevel(tank,level){
           
           tankObj.textNames[0]=tank.Team.color.toLowerCase();
           tank.setNewTank(tankObj);
-          tank.MoveingSpeed=0.4;
+          //tank.MoveingSpeed=0.4;
           tank.sizeX=4;
           tank.sizeZ=4;
           tank.DefshotStrong=160;
@@ -454,7 +454,7 @@ function setLevel(tank,level){
 
           tankObj.textNames[0]=tank.Team.color.toLowerCase();
           tank.setNewTank(tankObj);
-          tank.MoveingSpeed=0.45;
+          //tank.MoveingSpeed=0.45;
           tank.sizeX=6;
           tank.sizeZ=6;
           tank.DefshotStrong=255;

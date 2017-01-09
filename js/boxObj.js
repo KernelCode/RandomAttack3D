@@ -103,7 +103,7 @@ function boxObj(kc3d){
   this.Name="";
 
   //tank moving speed
-  this.MoveingSpeed=0.25;
+  this.MoveingSpeed=0.35;
 
   //tank rank level
   this.level="لاعب جديد";
