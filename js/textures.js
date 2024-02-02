@@ -49,7 +49,7 @@ GameTextures.prototype.setTexure = function (image, file_name, obj) {
     obj.handleTextureLoaded(file_name, image);
   };
 
-  image.src = "//objs/" + file_name + ".png";
+  image.src = "/objs/" + file_name + ".png";
 };
 
 //load Texture by filename

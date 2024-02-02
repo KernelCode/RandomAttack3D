@@ -894,7 +894,7 @@ function objs(type, ID, func, vrcsSize) {
   if (type == "DoomDay") {
     OBJ.downloadMeshes(
       {
-        tank: "//objs/DoomDay.obj",
+        tank: "/objs/DoomDay.obj",
       },
       function (meshes) {
         gl = GL;
@@ -913,7 +913,7 @@ function objs(type, ID, func, vrcsSize) {
   if (type == "fix") {
     OBJ.downloadMeshes(
       {
-        fix: "//objs/fixtank.obj",
+        fix: "/objs/fixtank.obj",
       },
       function (meshes) {
         gl = GL;
@@ -929,7 +929,7 @@ function objs(type, ID, func, vrcsSize) {
   if (type == "speedShot") {
     OBJ.downloadMeshes(
       {
-        fix: "//objs/speedShot.obj",
+        fix: "/objs/speedShot.obj",
       },
       function (meshes) {
         gl = GL;
@@ -945,7 +945,7 @@ function objs(type, ID, func, vrcsSize) {
   if (type == "strongShot") {
     OBJ.downloadMeshes(
       {
-        fix: "//objs/strongShot.obj",
+        fix: "/objs/strongShot.obj",
       },
       function (meshes) {
         gl = GL;
@@ -961,7 +961,7 @@ function objs(type, ID, func, vrcsSize) {
   if (type == "bigBoom") {
     OBJ.downloadMeshes(
       {
-        fix: "//objs/BigBoom.obj",
+        fix: "/objs/BigBoom.obj",
       },
       function (meshes) {
         gl = GL;
@@ -977,7 +977,7 @@ function objs(type, ID, func, vrcsSize) {
   if (type == "TeamHouse") {
     OBJ.downloadMeshes(
       {
-        fix: "//objs/TeamHouse.obj",
+        fix: "/objs/TeamHouse.obj",
       },
       function (meshes) {
         gl = GL;
@@ -993,7 +993,7 @@ function objs(type, ID, func, vrcsSize) {
   if (type == "Tre") {
     OBJ.downloadMeshes(
       {
-        tre: "//objs/tre.obj",
+        tre: "/objs/tre.obj",
       },
       function (meshes) {
         gl = GL;
