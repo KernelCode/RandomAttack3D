@@ -2,8 +2,8 @@
     websockets.js file to handle websockets communecations 
 */
 
-var ws = new WebSocket("wss://138.68.89.86:6001", "echo-protocol");
-//var ws = new WebSocket('ws://127.0.0.1:6001', 'echo-protocol');
+var ws = new WebSocket("ws://138.68.89.86:6001", "echo-protocol");
+//var ws = new WebSocket("ws://127.0.0.1:6001", "echo-protocol");
 
 ws.sendToString = function (msg) {
   var msgc = LZString.compressToUTF16(JSON.stringify(msg));
